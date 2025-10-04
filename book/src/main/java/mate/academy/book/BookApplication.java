@@ -21,21 +21,18 @@ public class BookApplication {
 
     @Bean
     public CommandLineRunner commandLineRunner() {
-        return new CommandLineRunner() {
-            @Override
-            public void run(String... args) throws Exception {
-                Book book = new Book();
-                book.setTitle("Love story");
-                book.setAuthor("Erich Segal");
-                book.setIsbn("9783596167692");
-                book.setPrice(BigDecimal.valueOf(350));
-                book.setDescription("Book about love story");
-                book.setCoverImage("Love story cover");
+        return args -> {
+            Book book = new Book();
+            book.setTitle("Love story");
+            book.setAuthor("Erich Segal");
+            book.setIsbn("9783596167692");
+            book.setPrice(BigDecimal.valueOf(350));
+            book.setDescription("Book about love story");
+            book.setCoverImage("Love story cover");
 
-                bookService.save(book);
+            bookService.save(book);
 
-                System.out.println(bookService.findAll());
-            }
+            System.out.println(bookService.findAll());
         };
     }
 }
