@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\BookApplication.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\BookApplication.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\exception\DataProcessingException.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\exception\DataProcessingException.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\model\Book.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\model\Book.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\repository\BookRepository.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\repository\BookRepository.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\repository\impl\BookRepositoryImpl.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\repository\impl\BookRepositoryImpl.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\service\BookService.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\service\BookService.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\java\mate\academy\book\service\impl\BookServiceImpl.java">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\java\mate\academy\book\service\impl\BookServiceImpl.java">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\main\resources\application.properties">
+<file name="C:\GIT_MA\spring-boot-intro\src\main\resources\application.properties">
 </file>
-<file name="C:\GIT_MA\spring-boot-intro\Spring-Boot-intro\src\test\resources\application.properties">
+<file name="C:\GIT_MA\spring-boot-intro\src\test\resources\application.properties">
 </file>
 </checkstyle>
