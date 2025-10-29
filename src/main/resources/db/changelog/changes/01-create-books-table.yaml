@@ -33,7 +33,7 @@ databaseChangeLog:
                   name: price
                   type: decimal
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: description
                   type: varchar(255)
