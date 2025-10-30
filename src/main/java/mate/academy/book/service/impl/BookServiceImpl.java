@@ -58,7 +58,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> search(Map<String, String> param) {
+    public List<BookDto> search(BookSearchParametersDto searchParameters) {
+        Map<String, String> param = bookSearchParametersMapper.toMap(searchParameters);
+        return getAll(param);
+    }
+
+    private List<BookDto> getAll(Map<String, String> param) {
         Specification<Book> specification = Specification.not(null);
         for (Map.Entry<String, String> entry : param.entrySet()) {
             Specification<Book> sp = bookSpecificationProvider
@@ -69,11 +74,4 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::toDto)
                 .toList();
     }
-
-    @Override
-    public List<BookDto> search(BookSearchParametersDto searchParameters) {
-        Map<String, String> param = bookSearchParametersMapper.toMap(searchParameters);
-        return search(param);
-    }
-
 }
