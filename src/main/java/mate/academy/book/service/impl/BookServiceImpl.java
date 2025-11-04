@@ -7,7 +7,7 @@ import mate.academy.book.dto.CreateBookRequestDto;
 import mate.academy.book.exception.EntityNotFoundException;
 import mate.academy.book.mapper.BookMapper;
 import mate.academy.book.model.Book;
-import mate.academy.book.repository.BookRepository;
+import mate.academy.book.repository.book.BookRepository;
 import mate.academy.book.service.BookService;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +32,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto getBookById(Long id) {
-        Book book = bookRepository.findBookById(id).orElseThrow(()
+        Book book = bookRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("Can't find book by id " + id));
         return bookMapper.toDto(book);
+    }
+
+    @Override
+    public void deleteBookById(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    @Override
+    public BookDto updateBookById(Long id, CreateBookRequestDto requestDto) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "Can't find book by id " + id));
+        bookMapper.toUpdatedModel(book, requestDto);
+        return bookMapper.toDto(bookRepository.save(book));
     }
 }
