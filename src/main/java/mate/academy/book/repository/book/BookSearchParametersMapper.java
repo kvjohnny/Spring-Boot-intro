@@ -7,13 +7,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BookSearchParametersMapper {
+    private static final String TITLE_KEY = "title";
+    private static final String AUTHOR_KEY = "author";
+
     public Map<String, String> toMap(BookSearchParametersDto parameters) {
         Map<String, String> searchParams = new HashMap<>();
         if (parameters.title() != null && !parameters.title().isBlank()) {
-            searchParams.put("title", parameters.title());
+            searchParams.put(TITLE_KEY, parameters.title());
         }
         if (parameters.author() != null && !parameters.author().isBlank()) {
-            searchParams.put("author", parameters.author());
+            searchParams.put(AUTHOR_KEY, parameters.author());
         }
         return searchParams;
     }
