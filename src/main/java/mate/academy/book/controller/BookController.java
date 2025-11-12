@@ -10,6 +10,7 @@ import mate.academy.book.dto.BookSearchParametersDto;
 import mate.academy.book.dto.CreateBookRequestDto;
 import mate.academy.book.service.BookService;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +32,7 @@ public class BookController {
 
     @GetMapping
     @Operation(summary = "Get all books", description = "Get a list of all available books")
-    public List<BookDto> getAllBooks(@ParameterObject Pageable pageable) {
+    public Page<BookDto> getAllBooks(@ParameterObject Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
