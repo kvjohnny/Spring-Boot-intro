@@ -14,9 +14,7 @@ import mate.academy.book.repository.book.BookSearchParametersMapper;
 import mate.academy.book.repository.book.BookSpecificationProvider;
 import mate.academy.book.service.BookService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -36,11 +34,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Page<BookDto> findAll(Pageable pageable) {
-        int pageNumber = pageable.getPageNumber();
-        int pageSize = pageable.getPageSize();
-        Sort sort = pageable.getSort();
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, sort);
-        return bookRepository.findAll(pageRequest).map(bookMapper::toDto);
+        return bookRepository.findAll(pageable)
+                .map(bookMapper::toDto);
     }
 
     @Override
