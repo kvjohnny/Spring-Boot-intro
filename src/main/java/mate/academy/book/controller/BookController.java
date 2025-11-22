@@ -5,10 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import mate.academy.book.dto.BookDto;
-import mate.academy.book.dto.BookSearchParametersDto;
-import mate.academy.book.dto.CreateBookRequestDto;
-import mate.academy.book.service.BookService;
+import mate.academy.book.dto.book.BookDto;
+import mate.academy.book.dto.book.BookSearchParametersDto;
+import mate.academy.book.dto.book.CreateBookRequestDto;
+import mate.academy.book.service.book.BookService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 @RequiredArgsConstructor
 @Tag(name = "Book management", description = "Endpoints for managing books")
 public class BookController {
