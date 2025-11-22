@@ -19,15 +19,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto save(UserRegistrationRequestDto registrationRequestDto)
             throws RegistrationException {
-        if (userRepository.findUserByEmail(registrationRequestDto.getEmail()).isPresent()) {
-            throw new RegistrationException("Can't register user");
+        if (userRepository.existsByEmail(registrationRequestDto.getEmail())) {
+            throw new RegistrationException("Can't register user by email "
+                    + registrationRequestDto.getEmail());
         }
-        User user = new User();
-        user.setEmail(registrationRequestDto.getEmail());
-        user.setPassword(registrationRequestDto.getPassword());
-        user.setFirstName(registrationRequestDto.getFirstName());
-        user.setLastName(registrationRequestDto.getLastName());
-        user.setShippingAddress(registrationRequestDto.getShippingAddress());
+        User user = userMapper.toModel(registrationRequestDto);
         return userMapper.toDto(userRepository.save(user));
     }
 }

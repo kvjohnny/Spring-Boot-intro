@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 @RequiredArgsConstructor
 @Tag(name = "Book management", description = "Endpoints for managing books")
 public class BookController {
