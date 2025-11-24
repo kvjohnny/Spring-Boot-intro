@@ -1,6 +1,8 @@
 package mate.academy.book.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,4 +32,6 @@ public class UserRegistrationRequestDto {
     @NotBlank
     private String lastName;
     private String shippingAddress;
+    @NotNull
+    private Set<Long> roles;
 }
