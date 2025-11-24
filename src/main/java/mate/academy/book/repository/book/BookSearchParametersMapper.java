@@ -2,7 +2,7 @@ package mate.academy.book.repository.book;
 
 import java.util.HashMap;
 import java.util.Map;
-import mate.academy.book.dto.BookSearchParametersDto;
+import mate.academy.book.dto.book.BookSearchParametersDto;
 import org.springframework.stereotype.Component;
 
 @Component
