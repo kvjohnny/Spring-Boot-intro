@@ -14,8 +14,10 @@ import mate.academy.book.repository.user.UserRepository;
 import mate.academy.book.service.user.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
