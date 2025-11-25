@@ -1,0 +1,95 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users-into-users-table
+      author: kvjohnny
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: email
+                  value: admin@adminexample.com
+              - column:
+                  name: password
+                  value: $2a$10$WV5t0mIQlzwV9PdS5bfEYOTXOuUcAVF15oYP/Zdy6.HU/mLDBJzZi
+              - column:
+                  name: first_name
+                  value: Admin
+              - column:
+                  name: last_name
+                  value: Superman
+              - column:
+                  name: shipping_address
+                  value: 123 Main St, City, Country
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: email
+                  value: john@doeexample.com
+              - column:
+                  name: password
+                  value: $2a$10$qk0zacwx.NIK3xAp.fb3meoYAjez9gsKTaQiUJZtg6aapbygGe1nm
+              - column:
+                  name: first_name
+                  value: John
+              - column:
+                  name: last_name
+                  value: Doe
+              - column:
+                  name: shipping_address
+                  value: 124 Main St, City, Country
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: email
+                  value: alice@doeexample.com
+              - column:
+                  name: password
+                  value: $2a$10$W8S8fl3R/IFt4B9PXTRNGOK1XgFWX8qT6OhhhvudkQrQ5k/WnOzpa
+              - column:
+                  name: first_name
+                  value: Alice
+              - column:
+                  name: last_name
+                  value: Doe
+              - column:
+                  name: shipping_address
+                  value: 125 Main St, City, Country
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: role_id
+                  value: 2
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: role_id
+                  value: 1
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 3
+              - column:
+                  name: role_id
+                  value: 1
