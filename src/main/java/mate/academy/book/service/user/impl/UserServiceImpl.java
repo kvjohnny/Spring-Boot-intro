@@ -31,11 +31,10 @@ public class UserServiceImpl implements UserService {
                     + registrationRequestDto.getEmail());
         }
         User user = userMapper.toModel(registrationRequestDto);
-        Set<Role> roles = new HashSet<>(roleRepository
-                .findAllById(registrationRequestDto.getRoles()));
-        user.setRoles(roles);
         user.setPassword(passwordEncoder.encode(
                 registrationRequestDto.getPassword()));
+        Set<Role> roles = new HashSet<>(roleRepository.findByName(Role.RoleName.USER));
+        user.setRoles(roles);
         return userMapper.toDto(userRepository.save(user));
     }
 }

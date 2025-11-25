@@ -9,3 +9,7 @@ databaseChangeLog:
       file: db/changelog/changes/04-insert-roles-into-roles-table.yaml
   - include:
       file: db/changelog/changes/05-create-users-roles-table.yaml
+  - include:
+      file: db/changelog/changes/06-insert-users-into-users-table.yaml
+  - include:
+      file: db/changelog/changes/07-add-is-deleted-into-users-table.yaml
