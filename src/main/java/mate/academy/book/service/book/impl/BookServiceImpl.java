@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import mate.academy.book.dto.book.BookDto;
+import mate.academy.book.dto.book.BookDtoWithoutCategoryIds;
 import mate.academy.book.dto.book.BookSearchParametersDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
 import mate.academy.book.exception.EntityNotFoundException;
@@ -40,7 +41,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto getBookById(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow(()
+        Book book = bookRepository.getBookById(id).orElseThrow(()
                 -> new EntityNotFoundException("Can't find book by id " + id));
         return bookMapper.toDto(book);
     }
@@ -56,6 +57,20 @@ public class BookServiceImpl implements BookService {
                 "Can't find book by id " + id));
         bookMapper.toUpdatedModel(book, requestDto);
         return bookMapper.toDto(bookRepository.save(book));
+    }
+
+    @Override
+    public List<BookDto> getBooksByCategoryId(Long id) {
+        return bookRepository.findAllByCategoryId(id).stream()
+                .map(bookMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> getBooksByCategoryIdWithoutCategories(Long id) {
+        return bookRepository.findAllByCategoryId(id).stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
     }
 
     @Override

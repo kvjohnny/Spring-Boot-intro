@@ -2,6 +2,7 @@ package mate.academy.book.service.book;
 
 import java.util.List;
 import mate.academy.book.dto.book.BookDto;
+import mate.academy.book.dto.book.BookDtoWithoutCategoryIds;
 import mate.academy.book.dto.book.BookSearchParametersDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,10 @@ public interface BookService {
     void deleteBookById(Long id);
 
     BookDto updateBookById(Long id, CreateBookRequestDto requestDto);
+
+    List<BookDto> getBooksByCategoryId(Long id);
+
+    List<BookDtoWithoutCategoryIds> getBooksByCategoryIdWithoutCategories(Long id);
 
     List<BookDto> searchBooks(BookSearchParametersDto searchParametersDto);
 }
