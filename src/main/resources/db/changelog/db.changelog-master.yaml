@@ -13,3 +13,7 @@ databaseChangeLog:
       file: db/changelog/changes/06-insert-users-into-users-table.yaml
   - include:
       file: db/changelog/changes/07-add-is-deleted-into-users-table.yaml
+  - include:
+      file: db/changelog/changes/08-create-categories-table.yaml
+  - include:
+      file: db/changelog/changes/09-create-book-category-table.yaml
