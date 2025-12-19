@@ -1,6 +1,5 @@
 package mate.academy.book.service.shoppingcart.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mate.academy.book.dto.cartitem.CartItemRequestDto;
 import mate.academy.book.dto.cartitem.CartItemUpdateRequestDto;
@@ -16,6 +15,7 @@ import mate.academy.book.repository.shoppingcart.ShoppingCartRepository;
 import mate.academy.book.repository.user.UserRepository;
 import mate.academy.book.service.shoppingcart.ShoppingCartService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -74,14 +74,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartRepository.save(shoppingCart);
     }
 
+    @Override
+    public void clearShoppingCart(String email) {
+        ShoppingCart shoppingCart = getShoppingCartByEmail(email);
+        shoppingCart.getCartItems().clear();
+    }
+
     private User getUserByEmail(String email) {
         return userRepository.findUserByEmail(email).orElseThrow(() ->
                 new EntityNotFoundException("Can't find user by email " + email));
     }
 
     private ShoppingCart getShoppingCartByEmail(String email) {
-        User user = userRepository.findUserByEmail(email).orElseThrow(() ->
-                new EntityNotFoundException("Can't find user by email " + email));
+        User user = getUserByEmail(email);
         return shoppingCartRepository
                 .findShoppingCartByUserId(user.getId()).orElseThrow(() ->
                         new EntityNotFoundException("Can't find shopping cart "
