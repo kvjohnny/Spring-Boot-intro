@@ -16,4 +16,6 @@ public interface ShoppingCartService {
             String email, CartItemRequestDto requestDto);
 
     void registerShoppingCard(String email);
+
+    void clearShoppingCart(String email);
 }
