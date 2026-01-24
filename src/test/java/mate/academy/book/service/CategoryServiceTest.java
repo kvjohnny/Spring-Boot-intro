@@ -20,7 +20,6 @@ import mate.academy.book.mapper.CategoryMapper;
 import mate.academy.book.model.Category;
 import mate.academy.book.repository.category.CategoryRepository;
 import mate.academy.book.service.category.impl.CategoryServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

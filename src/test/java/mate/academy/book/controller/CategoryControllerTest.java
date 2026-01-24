@@ -131,9 +131,9 @@ public class CategoryControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateCategory_WithExistingId_ReturnsUpdatedCategory() throws Exception {
         CategoryRequestDto categoryRequestDto =
-                CategoryTestDataFactory.createCategoryRequestDto();
+                CategoryTestDataFactory.createUpdatedCategoryRequestDto();
         CategoryResponseDto expected =
-                CategoryTestDataFactory.createCategoryResponseDto();
+                CategoryTestDataFactory.createUpdatedCategoryResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(categoryRequestDto);
         MvcResult result = mockMvc.perform(
                         put("/categories/{id}", 1L)
