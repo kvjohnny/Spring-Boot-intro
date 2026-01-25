@@ -1,4 +1,4 @@
-package mate.academy.book.factory;
+package mate.academy.book.util;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -8,7 +8,7 @@ import java.util.Set;
 import mate.academy.book.dto.book.BookDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
 
-public class BookTestDataFactory {
+public class BookTestDataHelper {
     public static CreateBookRequestDto createBookRequestDto() {
         CreateBookRequestDto requestDto = new CreateBookRequestDto();
         requestDto.setTitle("Book 1");

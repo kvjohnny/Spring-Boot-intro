@@ -15,7 +15,7 @@ import java.util.Optional;
 import mate.academy.book.dto.category.CategoryRequestDto;
 import mate.academy.book.dto.category.CategoryResponseDto;
 import mate.academy.book.exception.EntityNotFoundException;
-import mate.academy.book.factory.CategoryTestDataFactory;
+import mate.academy.book.util.CategoryTestDataHelper;
 import mate.academy.book.mapper.CategoryMapper;
 import mate.academy.book.model.Category;
 import mate.academy.book.repository.category.CategoryRepository;
@@ -49,7 +49,7 @@ public class CategoryServiceTest {
         Page<Category> categoryPage =
                 new PageImpl<>(categories, pageRequest, categories.size());
         List<CategoryResponseDto> categoryDtos =
-                CategoryTestDataFactory.createListOfCategoryResponseDtos();
+                CategoryTestDataHelper.createListOfCategoryResponseDtos();
         Page<CategoryResponseDto> expected =
                 new PageImpl<>(categoryDtos, pageRequest, categoryDtos.size());
         when(categoryRepository.findAll(pageRequest)).thenReturn(categoryPage);
@@ -70,7 +70,7 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         Category category = new Category();
         category.setId(categoryId);
-        CategoryResponseDto expected = CategoryTestDataFactory.createCategoryResponseDto();
+        CategoryResponseDto expected = CategoryTestDataHelper.createCategoryResponseDto();
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(categoryMapper.toDto(category)).thenReturn(expected);
         CategoryResponseDto actual = categoryServiceImpl.getById(categoryId);
@@ -100,8 +100,8 @@ public class CategoryServiceTest {
     @DisplayName("Save valid category")
     void save_WhenRequestDtoIsValid_ReturnsCategoryResponseDto() {
         Category category = new Category();
-        CategoryRequestDto categoryRequestDto = CategoryTestDataFactory.createCategoryRequestDto();
-        CategoryResponseDto expected = CategoryTestDataFactory.createCategoryResponseDto();
+        CategoryRequestDto categoryRequestDto = CategoryTestDataHelper.createCategoryRequestDto();
+        CategoryResponseDto expected = CategoryTestDataHelper.createCategoryResponseDto();
         when(categoryMapper.toEntity(categoryRequestDto)).thenReturn(category);
         when(categoryRepository.save(category)).thenReturn(category);
         when(categoryMapper.toDto(category)).thenReturn(expected);
@@ -121,8 +121,8 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         Category category = new Category();
         category.setId(categoryId);
-        CategoryRequestDto categoryRequestDto = CategoryTestDataFactory.createCategoryRequestDto();
-        CategoryResponseDto expected = CategoryTestDataFactory.createCategoryResponseDto();
+        CategoryRequestDto categoryRequestDto = CategoryTestDataHelper.createCategoryRequestDto();
+        CategoryResponseDto expected = CategoryTestDataHelper.createCategoryResponseDto();
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         doNothing().when(categoryMapper).toUpdatedModel(category, categoryRequestDto);
         when(categoryRepository.save(category)).thenReturn(category);
