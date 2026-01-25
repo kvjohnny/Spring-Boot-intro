@@ -27,6 +27,6 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
 
     @EntityGraph(attributePaths = "categories")
     @Query("SELECT DISTINCT b FROM Book b "
-            + "LEFT JOIN b.categories с WHERE с.id = :categoryId")
+            + "LEFT JOIN b.categories c WHERE c.id = :categoryId")
     List<Book> findAllByCategoryId(@Param("categoryId") Long categoryId);
 }

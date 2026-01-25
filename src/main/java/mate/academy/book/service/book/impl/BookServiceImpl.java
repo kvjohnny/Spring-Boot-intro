@@ -89,6 +89,5 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll(specification).stream()
                 .map(bookMapper::toDto)
                 .toList();
-
     }
 }
