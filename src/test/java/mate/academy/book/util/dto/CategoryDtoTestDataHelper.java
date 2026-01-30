@@ -1,11 +1,11 @@
-package mate.academy.book.util;
+package mate.academy.book.util.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 import mate.academy.book.dto.category.CategoryRequestDto;
 import mate.academy.book.dto.category.CategoryResponseDto;
 
-public class CategoryTestDataHelper {
+public class CategoryDtoTestDataHelper {
     public static CategoryRequestDto createCategoryRequestDto() {
         return new CategoryRequestDto("Fantasy", "Fantasy books");
     }

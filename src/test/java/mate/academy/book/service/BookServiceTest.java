@@ -18,7 +18,7 @@ import mate.academy.book.dto.book.BookDto;
 import mate.academy.book.dto.book.BookSearchParametersDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
 import mate.academy.book.exception.EntityNotFoundException;
-import mate.academy.book.util.BookTestDataHelper;
+import mate.academy.book.util.dto.BookDtoTestDataHelper;
 import mate.academy.book.mapper.BookMapper;
 import mate.academy.book.model.Book;
 import mate.academy.book.repository.book.BookRepository;
@@ -53,8 +53,8 @@ public class BookServiceTest {
     @DisplayName("Save valid book")
     void save_ValidBook_ReturnsValidBookDto() {
         Book book = new Book();
-        CreateBookRequestDto bookRequestDto = BookTestDataHelper.createBookRequestDto();
-        BookDto expected = BookTestDataHelper.createBookResponseDto();
+        CreateBookRequestDto bookRequestDto = BookDtoTestDataHelper.createBookRequestDto();
+        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
         when(bookMapper.toModel(bookRequestDto)).thenReturn(book);
         when(bookRepository.save(book)).thenReturn(book);
         when(bookMapper.toDto(book))
@@ -78,7 +78,7 @@ public class BookServiceTest {
         List<Book> books = List.of(book1, book2, book3);
         PageRequest pageRequest = PageRequest.of(0, books.size());
         Page<Book> booksPage = new PageImpl<>(books, pageRequest, books.size());
-        List<BookDto> bookDtos = BookTestDataHelper.createListOfBookDto();
+        List<BookDto> bookDtos = BookDtoTestDataHelper.createListOfBookDto();
         Page<BookDto> expected = new PageImpl<>(bookDtos, pageRequest, bookDtos.size());
         when(bookRepository.findAll(pageRequest)).thenReturn(booksPage);
         when(bookMapper.toDto(book1)).thenReturn(bookDtos.get(0));
@@ -98,7 +98,7 @@ public class BookServiceTest {
     @DisplayName("Get book with valid book id")
     void getBook_WithValidBookId_ReturnsValidBookDto() {
         Book book = new Book();
-        BookDto expected = BookTestDataHelper.createBookResponseDto();
+        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
         when(bookRepository.getBookById(anyLong())).thenReturn(Optional.of(book));
         when(bookMapper.toDto(book)).thenReturn(expected);
         BookDto actual = bookServiceImpl.getBookById(expected.getId());
@@ -140,8 +140,8 @@ public class BookServiceTest {
         Long bookId = 1L;
         Book book = new Book();
         book.setId(bookId);
-        CreateBookRequestDto bookRequestDto = BookTestDataHelper.createBookRequestDto();
-        BookDto expected = BookTestDataHelper.createBookResponseDto();
+        CreateBookRequestDto bookRequestDto = BookDtoTestDataHelper.createBookRequestDto();
+        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         doNothing().when(bookMapper).toUpdatedModel(book, bookRequestDto);
         when(bookRepository.save(book)).thenReturn(book);
@@ -163,7 +163,7 @@ public class BookServiceTest {
         Long categoryId = 1L;
         Book book = new Book();
         List<Book> books = List.of(book);
-        List<BookDto> expected = List.of(BookTestDataHelper.createBookResponseDto());
+        List<BookDto> expected = List.of(BookDtoTestDataHelper.createBookResponseDto());
         when(bookRepository.findAllByCategoryId(categoryId)).thenReturn(books);
         when(bookMapper.toDto(book)).thenReturn(expected.get(0));
         List<BookDto> actual = bookServiceImpl.getBooksByCategoryId(categoryId);
@@ -187,7 +187,7 @@ public class BookServiceTest {
         );
         Book book = new Book();
         List<Book> books = List.of(book);
-        BookDto bookResponseDto = BookTestDataHelper.createBookResponseDto();
+        BookDto bookResponseDto = BookDtoTestDataHelper.createBookResponseDto();
         List<BookDto> expected = List.of(bookResponseDto);
         Specification<Book> titleSpec = mock(Specification.class);
         Specification<Book> authorSpec = mock(Specification.class);

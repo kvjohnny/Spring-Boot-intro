@@ -60,6 +60,7 @@ public class ShoppingCartController {
     }
 
     @DeleteMapping("/items/{cartItemId}")
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @Operation(summary = "Delete cart item by id", description = "Delete cart item by id")
     public void deleteCartItem(Authentication authentication, @PathVariable Long cartItemId) {
         User user = (User) authentication.getPrincipal();
