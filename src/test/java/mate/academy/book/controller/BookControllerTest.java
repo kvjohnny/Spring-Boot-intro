@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import mate.academy.book.dto.book.BookDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
-import mate.academy.book.util.BookTestDataHelper;
+import mate.academy.book.util.dto.BookDtoTestDataHelper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -57,8 +57,8 @@ public class BookControllerTest {
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createBook_ValidRequestDto_Success() throws Exception {
-        CreateBookRequestDto requestDto = BookTestDataHelper.createBookRequestDto();
-        BookDto expected = BookTestDataHelper.createBookResponseDto();
+        CreateBookRequestDto requestDto = BookDtoTestDataHelper.createBookRequestDto();
+        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
         MvcResult result = mockMvc.perform(
@@ -114,7 +114,7 @@ public class BookControllerTest {
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getAll_GivenBooks_ReturnsAllBooks() throws Exception {
-        List<BookDto> expected = BookTestDataHelper.createListOfBookDto();
+        List<BookDto> expected = BookDtoTestDataHelper.createListOfBookDto();
         MvcResult result = mockMvc.perform(
                         get("/books")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -146,7 +146,7 @@ public class BookControllerTest {
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getBook_WithExistingBookId_ReturnsValidBook() throws Exception {
-        BookDto expected = BookTestDataHelper.createBookResponseDto();
+        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
         MvcResult result = mockMvc.perform(
                         get("/books/{id}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -186,8 +186,8 @@ public class BookControllerTest {
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateBook_WithValidBookId_ReturnsUpdatedBook() throws Exception {
-        BookDto expected = BookTestDataHelper.createUpdatedBookResponseDto();
-        CreateBookRequestDto updatedBookRequestDto = BookTestDataHelper.createUpdatedBookRequestDto();
+        BookDto expected = BookDtoTestDataHelper.createUpdatedBookResponseDto();
+        CreateBookRequestDto updatedBookRequestDto = BookDtoTestDataHelper.createUpdatedBookRequestDto();
         String jsonRequest = objectMapper.writeValueAsString(updatedBookRequestDto);
         MvcResult result = mockMvc.perform(
                         put("/books/{id}", 1L)
@@ -219,7 +219,7 @@ public class BookControllerTest {
     },
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void searchBooks_WhenTitleAndAuthorProvided_ReturnsMatchingBooks() throws Exception {
-        List<BookDto> expected = BookTestDataHelper.createListOfBookDto();
+        List<BookDto> expected = BookDtoTestDataHelper.createListOfBookDto();
         MvcResult result = mockMvc.perform(
                         get("/books/search")
                                 .param("title", "book")

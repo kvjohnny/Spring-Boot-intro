@@ -1,14 +1,13 @@
-package mate.academy.book.util;
+package mate.academy.book.util.dto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import mate.academy.book.dto.book.BookDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
 
-public class BookTestDataHelper {
+public class BookDtoTestDataHelper {
     public static CreateBookRequestDto createBookRequestDto() {
         CreateBookRequestDto requestDto = new CreateBookRequestDto();
         requestDto.setTitle("Book 1");
