@@ -22,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             + "LEFT JOIN o.orderItems "
             + "WHERE o.id = :orderId "
             + "AND o.user.id =:userId")
-    List<OrderItem> findAllOrderItemsByOrderIdAAndUserId(
+    List<OrderItem> findAllOrderItemsByOrderIdAndUserId(
             @Param("orderId") Long orderId,
             @Param("userId") Long userId);
 }
