@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -34,14 +33,7 @@ import mate.academy.book.repository.shoppingcart.ShoppingCartRepository;
 import mate.academy.book.repository.user.UserRepository;
 import mate.academy.book.service.order.impl.OrderServiceImpl;
 import mate.academy.book.service.shoppingcart.ShoppingCartService;
-import mate.academy.book.util.dto.OrderDtoTestDataHelper;
-import mate.academy.book.util.dto.OrderItemDtoTestDataHelper;
-import mate.academy.book.util.dto.UpdateOrderStatusDtoTestDataHelper;
-import mate.academy.book.util.entity.CartItemTestDataHelper;
-import mate.academy.book.util.entity.OrderItemTestDataHelper;
-import mate.academy.book.util.entity.OrderTestDataHelper;
-import mate.academy.book.util.entity.ShoppingCartTestDataHelper;
-import mate.academy.book.util.entity.UserTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,15 +66,15 @@ public class OrderServiceTest {
     @Test
     @DisplayName("Complete order")
     void completeOrder_WhenShoppingCartIsNotEmpty_ReturnsOrderDto() {
-        OrderRequestDto orderRequestDto = OrderDtoTestDataHelper.createOrderRequestDto();
-        User user = UserTestDataHelper.createDefaultUserWithRole();
-        ShoppingCart shoppingCart = ShoppingCartTestDataHelper.createDefaultShoppingCart();
+        OrderRequestDto orderRequestDto = TestUtil.createOrderRequestDto();
+        User user = TestUtil.createDefaultUserWithRole();
+        ShoppingCart shoppingCart = TestUtil.createDefaultShoppingCart();
         shoppingCart.setUser(user);
-        CartItem cartItem = CartItemTestDataHelper.createFirstCartItemWithFilledFields();
+        CartItem cartItem = TestUtil.createFirstCartItemWithFilledFields();
         shoppingCart.setCartItems(Set.of(cartItem));
-        Order order = OrderTestDataHelper.createDefaultOrder();
-        OrderItem orderItem = OrderItemTestDataHelper.createDefaultOrderItem();
-        OrderResponseDto expected = OrderDtoTestDataHelper.createOrderResponseDto();
+        Order order = TestUtil.createDefaultOrder();
+        OrderItem orderItem = TestUtil.createDefaultOrderItem();
+        OrderResponseDto expected = TestUtil.createOrderResponseDto();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findShoppingCartByUserId(user.getId())).thenReturn(Optional.of(shoppingCart));
         when(orderMapper.toModel(orderRequestDto)).thenReturn(order);
@@ -94,13 +86,13 @@ public class OrderServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(shoppingCartRepository, times(1)).findShoppingCartByUserId(user.getId());
-        verify(orderMapper, times(1)).toModel(orderRequestDto);
-        verify(itemMapper, times(1)).toOrderItem(cartItem, order);
-        verify(shoppingCartService, times(1)).clearShoppingCart(user.getEmail());
-        verify(orderRepository, times(1)).save(any(Order.class));
-        verify(orderMapper, times(1)).toDto(order);
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(shoppingCartRepository).findShoppingCartByUserId(user.getId());
+        verify(orderMapper).toModel(orderRequestDto);
+        verify(itemMapper).toOrderItem(cartItem, order);
+        verify(shoppingCartService).clearShoppingCart(user.getEmail());
+        verify(orderRepository).save(any(Order.class));
+        verify(orderMapper).toDto(order);
         verifyNoMoreInteractions(
                 userRepository,
                 shoppingCartRepository,
@@ -114,9 +106,9 @@ public class OrderServiceTest {
     @Test
     @DisplayName("Throws DataProcessingException when shopping cart is empty")
     void completeOrder_WhenShoppingCartIsEmpty_ThrowsDataProcessingException() {
-        OrderRequestDto orderRequestDto = OrderDtoTestDataHelper.createOrderRequestDto();
-        User user = UserTestDataHelper.createDefaultUserWithRole();
-        ShoppingCart shoppingCart = ShoppingCartTestDataHelper.createDefaultShoppingCart();
+        OrderRequestDto orderRequestDto = TestUtil.createOrderRequestDto();
+        User user = TestUtil.createDefaultUserWithRole();
+        ShoppingCart shoppingCart = TestUtil.createDefaultShoppingCart();
         shoppingCart.setUser(user);
         shoppingCart.setCartItems(Collections.emptySet());
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -126,8 +118,8 @@ public class OrderServiceTest {
         String expected = "Can't create order, because shopping cart is empty";
         String actual = exception.getMessage();
         assertThat(actual).isEqualTo(expected);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(shoppingCartRepository, times(1)).findShoppingCartByUserId(user.getId());
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(shoppingCartRepository).findShoppingCartByUserId(user.getId());
         verifyNoMoreInteractions(userRepository, shoppingCartRepository);
     }
 
@@ -135,11 +127,11 @@ public class OrderServiceTest {
     @DisplayName("Get order history")
     void getOrderHistory_WhenUserExist_ReturnsPageOfOrderDtos() {
         PageRequest pageRequest = PageRequest.of(0, 1);
-        Order order = OrderTestDataHelper.createDefaultOrder();
+        Order order = TestUtil.createDefaultOrder();
         List<Order> orders = List.of(order);
         Page<Order> orderPage = new PageImpl<>(orders, pageRequest, orders.size());
         User user = order.getUser();
-        OrderResponseDto orderResponseDto = OrderDtoTestDataHelper.createOrderResponseDto();
+        OrderResponseDto orderResponseDto = TestUtil.createOrderResponseDto();
         List<OrderResponseDto> orderResponseDtos = List.of(orderResponseDto);
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(orderRepository.findAllByUserId(user.getId(), pageRequest)).thenReturn(orderPage);
@@ -147,20 +139,20 @@ public class OrderServiceTest {
         Page<OrderResponseDto> actual = orderServiceImpl.getOrderHistory(user.getEmail(), pageRequest);
         assertThat(actual.getContent()).isEqualTo(orderResponseDtos);
         assertThat(actual.getTotalElements()).isEqualTo(1);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(orderRepository, times(1)).findAllByUserId(user.getId(), pageRequest);
-        verify(orderMapper, times(1)).toDto(order);
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(orderRepository).findAllByUserId(user.getId(), pageRequest);
+        verify(orderMapper).toDto(order);
         verifyNoMoreInteractions(userRepository, orderRepository, orderMapper);
     }
 
     @Test
     @DisplayName("Get all order items by order id")
     void getAllOrderItems_WhenOrderExists_ReturnsListOfOrderItemDtos() {
-        OrderItem orderItem = OrderItemTestDataHelper.createDefaultOrderItem();
+        OrderItem orderItem = TestUtil.createDefaultOrderItem();
         Order order = orderItem.getOrder();
         User user = order.getUser();
         List<OrderItem> orderItems = List.of(orderItem);
-        OrderItemResponseDto orderItemDto = OrderItemDtoTestDataHelper.createDefaultOrderItemDto();
+        OrderItemResponseDto orderItemDto = TestUtil.createDefaultOrderItemDto();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(orderRepository.findAllOrderItemsByOrderIdAndUserId(
                 order.getId(), user.getId())).thenReturn(orderItems);
@@ -168,17 +160,17 @@ public class OrderServiceTest {
         List<OrderItemResponseDto> actual =
                 orderServiceImpl.getAllOrderItemsByOrderId(user.getEmail(), order.getId());
         assertThat(actual).containsExactly(orderItemDto);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(orderRepository, times(1))
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(orderRepository)
                 .findAllOrderItemsByOrderIdAndUserId(order.getId(), user.getId());
-        verify(orderItemMapper, times(1)).toDto(orderItem);
+        verify(orderItemMapper).toDto(orderItem);
         verifyNoMoreInteractions(userRepository, orderRepository, orderItemMapper);
     }
 
     @Test
     @DisplayName("Throws DataProcessingException when order items are empty")
     void getAllOrderItems_WhenOrderItemsEmpty_ThrowsDataProcessingException() {
-        Order order = OrderTestDataHelper.createDefaultOrder();
+        Order order = TestUtil.createDefaultOrder();
         User user = order.getUser();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(orderRepository.findAllOrderItemsByOrderIdAndUserId(order.getId(), user.getId()))
@@ -188,8 +180,8 @@ public class OrderServiceTest {
         String expected = "Can't get order items by order id " + order.getId();
         String actual = exception.getMessage();
         assertThat(actual).isEqualTo(expected);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(orderRepository, times(1))
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(orderRepository)
                 .findAllOrderItemsByOrderIdAndUserId(order.getId(), user.getId());
         verifyNoMoreInteractions(userRepository, orderRepository);
     }
@@ -200,7 +192,7 @@ public class OrderServiceTest {
         Long orderId = 1L;
         Long orderItemId = 1L;
         String email = "example@gmail.com";
-        OrderItemResponseDto expected = OrderItemDtoTestDataHelper.createDefaultOrderItemDto();
+        OrderItemResponseDto expected = TestUtil.createDefaultOrderItemDto();
         OrderServiceImpl spyOrderService = spy(orderServiceImpl);
         doReturn(List.of(expected))
                 .when(spyOrderService)
@@ -213,19 +205,19 @@ public class OrderServiceTest {
     @Test
     @DisplayName("Update order status by order id")
     void updateOrderStatus_WhenOrderExists_UpdatesStatusAndReturnsOrderDto() {
-        Order order = OrderTestDataHelper.createDefaultOrder();
+        Order order = TestUtil.createDefaultOrder();
         UpdateOrderStatusRequestDto updatedOrderStatusRequestDto =
-                UpdateOrderStatusDtoTestDataHelper.updateOrderStatusRequestDto();
+                TestUtil.updateOrderStatusRequestDto();
         OrderResponseDto expected =
-                OrderDtoTestDataHelper.updateOrderResponseDto();
+                TestUtil.updateOrderResponseDto();
         when(orderRepository.getOrderById(order.getId())).thenReturn(Optional.of(order));
         when(orderMapper.toDto(any(Order.class))).thenReturn(expected);
         OrderResponseDto actual = orderServiceImpl
                 .updateOrderStatus(order.getId(), updatedOrderStatusRequestDto);
         assertThat(order.getStatus()).isEqualTo(updatedOrderStatusRequestDto.status());
         assertThat(actual).isEqualTo(expected);
-        verify(orderRepository, times(1)).getOrderById(order.getId());
-        verify(orderMapper, times(1))
+        verify(orderRepository).getOrderById(order.getId());
+        verify(orderMapper)
                 .toDto(argThat(o -> o.getStatus().equals(updatedOrderStatusRequestDto.status())));
         verifyNoMoreInteractions(orderRepository, orderMapper);
     }

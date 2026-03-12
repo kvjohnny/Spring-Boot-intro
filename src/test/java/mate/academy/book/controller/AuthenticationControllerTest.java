@@ -10,7 +10,7 @@ import mate.academy.book.dto.user.UserLoginRequestDto;
 import mate.academy.book.dto.user.UserLoginResponseDto;
 import mate.academy.book.dto.user.UserRegistrationRequestDto;
 import mate.academy.book.dto.user.UserResponseDto;
-import mate.academy.book.util.dto.UserDtoTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +46,8 @@ public class AuthenticationControllerTest {
     }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void registerNewUser_WithValidRequestDto_Success() throws Exception {
         UserRegistrationRequestDto userRequestDto =
-                UserDtoTestDataHelper.createUserRequestDto();
-        UserResponseDto expected = UserDtoTestDataHelper.createUserResponseDto();
+                TestUtil.createUserRequestDto();
+        UserResponseDto expected = TestUtil.createUserResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(userRequestDto);
         MvcResult result = mockMvc.perform(
                         post("/auth/registration")
@@ -82,7 +82,7 @@ public class AuthenticationControllerTest {
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void login_ValidCredentials_ReturnsToken() throws Exception {
         UserLoginRequestDto request =
-                UserDtoTestDataHelper.createUserLoginRequestDto();
+                TestUtil.createUserLoginRequestDto();
         String jsonRequest = objectMapper.writeValueAsString(request);
         MvcResult result = mockMvc.perform(
                         post("/auth/login")

@@ -16,9 +16,7 @@ import mate.academy.book.dto.order.OrderResponseDto;
 import mate.academy.book.dto.order.UpdateOrderStatusRequestDto;
 import mate.academy.book.dto.orderitem.OrderItemResponseDto;
 import mate.academy.book.model.Order;
-import mate.academy.book.util.dto.OrderDtoTestDataHelper;
-import mate.academy.book.util.dto.OrderItemDtoTestDataHelper;
-import mate.academy.book.util.dto.UpdateOrderStatusDtoTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,8 +85,8 @@ public class OrderControllerTest {
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Test
     void completeOrder_WhenShoppingCartIsNotEmpty_ReturnsOrder() throws Exception {
-        OrderRequestDto orderRequestDto = OrderDtoTestDataHelper.createOrderRequestDto();
-        OrderResponseDto expected = OrderDtoTestDataHelper.createOrderResponseDto();
+        OrderRequestDto orderRequestDto = TestUtil.createOrderRequestDto();
+        OrderResponseDto expected = TestUtil.createOrderResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(orderRequestDto);
         MvcResult result = mockMvc.perform(
                         post("/orders")
@@ -117,7 +115,7 @@ public class OrderControllerTest {
     @Test
     void getOrderHistory_WhenUserExists_ReturnsUserOrders() throws Exception {
         OrderResponseDto orderResponseDto =
-                OrderDtoTestDataHelper.createOrderResponseDto();
+                TestUtil.createOrderResponseDto();
         List<OrderResponseDto> expected = List.of(orderResponseDto);
         MvcResult result = mockMvc.perform(
                         get("/orders")
@@ -138,7 +136,7 @@ public class OrderControllerTest {
     @Test
     @DisplayName("Get all order items by order id")
     void getAllOrderItemsByOrderId_WhenOrderExists_ReturnsOfOrderItems() throws Exception {
-        OrderItemResponseDto orderItemDto = OrderItemDtoTestDataHelper.createDefaultOrderItemDto();
+        OrderItemResponseDto orderItemDto = TestUtil.createDefaultOrderItemDto();
         List<OrderItemResponseDto> expected = List.of(orderItemDto);
         MvcResult result = mockMvc.perform(
                         get("/orders/{orderId}/items", 1L)
@@ -161,7 +159,7 @@ public class OrderControllerTest {
     @Test
     @DisplayName("Get the order item by id and order id")
     void getOrderItemByIdAndOrderId_WhenOrderAndOrderItemExist_ReturnsOrderItem() throws Exception {
-        OrderItemResponseDto expected = OrderItemDtoTestDataHelper.createDefaultOrderItemDto();
+        OrderItemResponseDto expected = TestUtil.createDefaultOrderItemDto();
         MvcResult result = mockMvc.perform(
                         get("/orders/{orderId}/items/{id}", 1L, 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -181,8 +179,8 @@ public class OrderControllerTest {
     @DisplayName("Update the order's status")
     void updateOrderStatus_WhenOrderExists_ReturnsUpdatedOrder() throws Exception {
         UpdateOrderStatusRequestDto updatedOrderStatusRequestDto =
-                UpdateOrderStatusDtoTestDataHelper.updateOrderStatusRequestDto();
-        OrderResponseDto expected = OrderDtoTestDataHelper.updateOrderResponseDto();
+                TestUtil.updateOrderStatusRequestDto();
+        OrderResponseDto expected = TestUtil.updateOrderResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(updatedOrderStatusRequestDto);
         MvcResult result = mockMvc.perform(
                         patch("/orders/{id}", 1L)

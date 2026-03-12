@@ -2,7 +2,6 @@ package mate.academy.book.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -17,8 +16,7 @@ import mate.academy.book.repository.role.RoleRepository;
 import mate.academy.book.repository.user.UserRepository;
 import mate.academy.book.service.shoppingcart.ShoppingCartService;
 import mate.academy.book.service.user.impl.UserServiceImpl;
-import mate.academy.book.util.dto.UserDtoTestDataHelper;
-import mate.academy.book.util.entity.UserTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,9 +44,9 @@ public class UserServiceTest {
     @DisplayName("Save a new user")
     void saveUser_WithValidData_ReturnsUserDto() throws RegistrationException {
         UserRegistrationRequestDto userRequestDto =
-                UserDtoTestDataHelper.createUserRequestDto();
-        User user = UserTestDataHelper.createDefaultUserWithRole();
-        UserResponseDto expected = UserDtoTestDataHelper.createUserResponseDto();
+                TestUtil.createUserRequestDto();
+        User user = TestUtil.createDefaultUserWithRole();
+        UserResponseDto expected = TestUtil.createUserResponseDto();
         when(userRepository.existsByEmail(userRequestDto.getEmail())).thenReturn(false);
         when(userMapper.toModel(userRequestDto)).thenReturn(user);
         when(passwordEncoder.encode(userRequestDto.getPassword())).thenReturn(user.getPassword());
@@ -59,14 +57,14 @@ public class UserServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(userRepository, times(1)).existsByEmail(userRequestDto.getEmail());
-        verify(userMapper, times(1)).toModel(userRequestDto);
-        verify(userRepository, times(1)).save(user);
-        verify(userMapper, times(1)).toDto(user);
-        verify(passwordEncoder, times(1)).encode(userRequestDto.getPassword());
-        verify(roleRepository, times(1))
+        verify(userRepository).existsByEmail(userRequestDto.getEmail());
+        verify(userMapper).toModel(userRequestDto);
+        verify(userRepository).save(user);
+        verify(userMapper).toDto(user);
+        verify(passwordEncoder).encode(userRequestDto.getPassword());
+        verify(roleRepository)
                 .findByName(Role.RoleName.USER);
-        verify(shoppingCartService, times(1)).registerShoppingCard(user.getEmail());
+        verify(shoppingCartService).registerShoppingCard(user.getEmail());
         verifyNoMoreInteractions(
                 userRepository,
                 userMapper,
@@ -80,7 +78,7 @@ public class UserServiceTest {
     @DisplayName("Save user with existing email throws RegistrationException")
     void saveUser_WhenEmailExists_ThrowsRegistrationException() {
         UserRegistrationRequestDto userRequestDto =
-                UserDtoTestDataHelper.createUserRequestDto();
+                TestUtil.createUserRequestDto();
         when(userRepository.existsByEmail(userRequestDto.getEmail()))
                 .thenReturn(true);
         RegistrationException exception = assertThrows(RegistrationException.class,
