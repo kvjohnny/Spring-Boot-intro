@@ -29,8 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-import javax.swing.plaf.TableUI;
-
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
     @Mock
