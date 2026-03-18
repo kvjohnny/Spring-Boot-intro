@@ -14,7 +14,7 @@ import java.util.Optional;
 import mate.academy.book.dto.category.CategoryRequestDto;
 import mate.academy.book.dto.category.CategoryResponseDto;
 import mate.academy.book.exception.EntityNotFoundException;
-import mate.academy.book.util.dto.CategoryDtoTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import mate.academy.book.mapper.CategoryMapper;
 import mate.academy.book.model.Category;
 import mate.academy.book.repository.category.CategoryRepository;
@@ -48,7 +48,7 @@ public class CategoryServiceTest {
         Page<Category> categoryPage =
                 new PageImpl<>(categories, pageRequest, categories.size());
         List<CategoryResponseDto> categoryDtos =
-                CategoryDtoTestDataHelper.createListOfCategoryResponseDtos();
+                TestUtil.createListOfCategoryResponseDtos();
         Page<CategoryResponseDto> expected =
                 new PageImpl<>(categoryDtos, pageRequest, categoryDtos.size());
         when(categoryRepository.findAll(pageRequest)).thenReturn(categoryPage);
@@ -58,7 +58,7 @@ public class CategoryServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(categoryRepository, times(1)).findAll(pageRequest);
+        verify(categoryRepository).findAll(pageRequest);
         verify(categoryMapper, times(2)).toDto(any(Category.class));
         verifyNoMoreInteractions(categoryRepository, categoryMapper);
     }
@@ -69,15 +69,15 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         Category category = new Category();
         category.setId(categoryId);
-        CategoryResponseDto expected = CategoryDtoTestDataHelper.createCategoryResponseDto();
+        CategoryResponseDto expected = TestUtil.createCategoryResponseDto();
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(categoryMapper.toDto(category)).thenReturn(expected);
         CategoryResponseDto actual = categoryServiceImpl.getById(categoryId);
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryMapper, times(1)).toDto(category);
+        verify(categoryRepository).findById(categoryId);
+        verify(categoryMapper).toDto(category);
         verifyNoMoreInteractions(categoryRepository, categoryMapper);
     }
 
@@ -91,7 +91,7 @@ public class CategoryServiceTest {
         String expected = "Can't find category by id " + categoryId;
         String actual = exception.getMessage();
         assertThat(actual).isEqualTo(expected);
-        verify(categoryRepository, times(1)).findById(categoryId);
+        verify(categoryRepository).findById(categoryId);
         verifyNoMoreInteractions(categoryRepository);
     }
 
@@ -99,8 +99,8 @@ public class CategoryServiceTest {
     @DisplayName("Save valid category")
     void save_WhenRequestDtoIsValid_ReturnsCategoryResponseDto() {
         Category category = new Category();
-        CategoryRequestDto categoryRequestDto = CategoryDtoTestDataHelper.createCategoryRequestDto();
-        CategoryResponseDto expected = CategoryDtoTestDataHelper.createCategoryResponseDto();
+        CategoryRequestDto categoryRequestDto = TestUtil.createCategoryRequestDto();
+        CategoryResponseDto expected = TestUtil.createCategoryResponseDto();
         when(categoryMapper.toEntity(categoryRequestDto)).thenReturn(category);
         when(categoryRepository.save(category)).thenReturn(category);
         when(categoryMapper.toDto(category)).thenReturn(expected);
@@ -108,9 +108,9 @@ public class CategoryServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(categoryMapper, times(1)).toEntity(categoryRequestDto);
-        verify(categoryRepository, times(1)).save(category);
-        verify(categoryMapper, times(1)).toDto(category);
+        verify(categoryMapper).toEntity(categoryRequestDto);
+        verify(categoryRepository).save(category);
+        verify(categoryMapper).toDto(category);
         verifyNoMoreInteractions(categoryMapper, categoryRepository);
     }
 
@@ -120,8 +120,8 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         Category category = new Category();
         category.setId(categoryId);
-        CategoryRequestDto categoryRequestDto = CategoryDtoTestDataHelper.createCategoryRequestDto();
-        CategoryResponseDto expected = CategoryDtoTestDataHelper.createCategoryResponseDto();
+        CategoryRequestDto categoryRequestDto = TestUtil.createCategoryRequestDto();
+        CategoryResponseDto expected = TestUtil.createCategoryResponseDto();
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         doNothing().when(categoryMapper).toUpdatedModel(category, categoryRequestDto);
         when(categoryRepository.save(category)).thenReturn(category);
@@ -130,10 +130,10 @@ public class CategoryServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryMapper, times(1)).toUpdatedModel(category, categoryRequestDto);
-        verify(categoryRepository, times(1)).save(category);
-        verify(categoryMapper, times(1)).toDto(category);
+        verify(categoryRepository).findById(categoryId);
+        verify(categoryMapper).toUpdatedModel(category, categoryRequestDto);
+        verify(categoryRepository).save(category);
+        verify(categoryMapper).toDto(category);
         verifyNoMoreInteractions(categoryRepository, categoryMapper);
     }
 
@@ -143,7 +143,7 @@ public class CategoryServiceTest {
         Long categoryId = 1L;
         doNothing().when(categoryRepository).deleteCategoryById(categoryId);
         categoryServiceImpl.deleteCategoryById(categoryId);
-        verify(categoryRepository, times(1)).deleteCategoryById(categoryId);
+        verify(categoryRepository).deleteCategoryById(categoryId);
         verifyNoMoreInteractions(categoryRepository);
     }
 }

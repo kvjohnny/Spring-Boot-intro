@@ -15,8 +15,6 @@ import mate.academy.book.exception.EntityNotFoundException;
 import mate.academy.book.mapper.ItemMapper;
 import mate.academy.book.mapper.OrderItemMapper;
 import mate.academy.book.mapper.OrderMapper;
-import mate.academy.book.model.Book;
-import mate.academy.book.model.CartItem;
 import mate.academy.book.model.Order;
 import mate.academy.book.model.OrderItem;
 import mate.academy.book.model.ShoppingCart;
@@ -47,16 +45,16 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto completeOrder(String email, OrderRequestDto requestDto) {
         ShoppingCart shoppingCart = getShoppingCartByEmail(email);
         if (shoppingCart.getCartItems().isEmpty()) {
-            throw new DataProcessingException("Can't create oder, "
-                    + "because shopping cart id empty");
+            throw new DataProcessingException("Can't create order, "
+                    + "because shopping cart is empty");
         }
         Order order = orderMapper.toModel(requestDto);
         order.setUser(shoppingCart.getUser());
         order.setStatus(Order.Status.PENDING);
-        order.setTotal(getTotalBooksPrice(email));
+        order.setTotal(getTotalBooksPrice(shoppingCart));
         order.setOrderDate(LocalDateTime.now());
         order.setOrderItems(
-                getListOfOrderItemsFromListOfCartItems(email, order));
+                getListOfOrderItemsFromListOfCartItems(shoppingCart, order));
         shoppingCartService.clearShoppingCart(email);
         return orderMapper.toDto(orderRepository.save(order));
     }
@@ -70,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderItemResponseDto> getAllOrderItemsByOrderId(String email, Long orderId) {
         User user = getUserByEmail(email);
-        List<OrderItem> orderItems = orderRepository.findAllOrderItemsByOrderIdAAndUserId(
+        List<OrderItem> orderItems = orderRepository.findAllOrderItemsByOrderIdAndUserId(
                 orderId, user.getId());
         if (orderItems.isEmpty()) {
             throw new DataProcessingException("Can't get order items by order id " + orderId);
@@ -117,17 +115,16 @@ public class OrderServiceImpl implements OrderService {
                                 + "by user with email " + user.getEmail()));
     }
 
-    private BigDecimal getTotalBooksPrice(String email) {
-        ShoppingCart shoppingCart = getShoppingCartByEmail(email);
+    private BigDecimal getTotalBooksPrice(ShoppingCart shoppingCart) {
         return shoppingCart.getCartItems().stream()
-                .map(CartItem::getBook)
-                .map(Book::getPrice)
+                .map(cartItem -> cartItem.getBook()
+                        .getPrice()
+                        .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private Set<OrderItem> getListOfOrderItemsFromListOfCartItems(
-            String email, Order order) {
-        ShoppingCart shoppingCart = getShoppingCartByEmail(email);
+            ShoppingCart shoppingCart, Order order) {
         return shoppingCart.getCartItems().stream()
                 .map(cartItem -> itemMapper.toOrderItem(cartItem, order))
                 .collect(Collectors.toSet());

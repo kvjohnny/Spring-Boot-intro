@@ -14,8 +14,7 @@ import java.util.List;
 import mate.academy.book.dto.book.BookDto;
 import mate.academy.book.dto.category.CategoryRequestDto;
 import mate.academy.book.dto.category.CategoryResponseDto;
-import mate.academy.book.util.dto.BookDtoTestDataHelper;
-import mate.academy.book.util.dto.CategoryDtoTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +52,8 @@ public class CategoryControllerTest {
     @Sql(scripts = "classpath:database/categories/remove-categories-from-categories-table.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createCategory_WithValidRequestDto_Success() throws Exception {
-        CategoryRequestDto categoryRequestDto = CategoryDtoTestDataHelper.createCategoryRequestDto();
-        CategoryResponseDto expected = CategoryDtoTestDataHelper.createCategoryResponseDto();
+        CategoryRequestDto categoryRequestDto = TestUtil.createCategoryRequestDto();
+        CategoryResponseDto expected = TestUtil.createCategoryResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(categoryRequestDto);
         MvcResult result = mockMvc.perform(
                         post("/categories")
@@ -83,7 +82,7 @@ public class CategoryControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAll_ExistingCategories_ReturnsAllCategories() throws Exception {
         List<CategoryResponseDto> expected =
-                CategoryDtoTestDataHelper.createListOfCategoryResponseDtos();
+                TestUtil.createListOfCategoryResponseDtos();
         MvcResult result = mockMvc.perform(
                         get("/categories")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,7 +107,7 @@ public class CategoryControllerTest {
     @Sql(scripts = "classpath:database/categories/remove-categories-from-categories-table.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getCategory_WithExistingCategoryId_ReturnsValidCategory() throws Exception {
-        CategoryResponseDto expected = CategoryDtoTestDataHelper.createCategoryResponseDto();
+        CategoryResponseDto expected = TestUtil.createCategoryResponseDto();
         MvcResult result = mockMvc.perform(
                         get("/categories/{id}", 1L)
                 )
@@ -131,9 +130,9 @@ public class CategoryControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateCategory_WithExistingId_ReturnsUpdatedCategory() throws Exception {
         CategoryRequestDto categoryRequestDto =
-                CategoryDtoTestDataHelper.createUpdatedCategoryRequestDto();
+                TestUtil.createUpdatedCategoryRequestDto();
         CategoryResponseDto expected =
-                CategoryDtoTestDataHelper.createUpdatedCategoryResponseDto();
+                TestUtil.createUpdatedCategoryResponseDto();
         String jsonRequest = objectMapper.writeValueAsString(categoryRequestDto);
         MvcResult result = mockMvc.perform(
                         put("/categories/{id}", 1L)
@@ -168,7 +167,7 @@ public class CategoryControllerTest {
     }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void getAllBooks_WhenValidCategoryId_ReturnsBooksWithMatchingCategoryId() throws Exception {
         List<BookDto> expected =
-                BookDtoTestDataHelper.createListOfBookDtosWithSameCategoryId();
+                TestUtil.createListOfBookDtosWithSameCategoryId();
         MvcResult result = mockMvc.perform(
                         get("/categories/{id}/books", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)

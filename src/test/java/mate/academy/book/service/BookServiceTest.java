@@ -18,7 +18,7 @@ import mate.academy.book.dto.book.BookDto;
 import mate.academy.book.dto.book.BookSearchParametersDto;
 import mate.academy.book.dto.book.CreateBookRequestDto;
 import mate.academy.book.exception.EntityNotFoundException;
-import mate.academy.book.util.dto.BookDtoTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import mate.academy.book.mapper.BookMapper;
 import mate.academy.book.model.Book;
 import mate.academy.book.repository.book.BookRepository;
@@ -53,8 +53,8 @@ public class BookServiceTest {
     @DisplayName("Save valid book")
     void save_ValidBook_ReturnsValidBookDto() {
         Book book = new Book();
-        CreateBookRequestDto bookRequestDto = BookDtoTestDataHelper.createBookRequestDto();
-        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
+        CreateBookRequestDto bookRequestDto = TestUtil.createBookRequestDto();
+        BookDto expected = TestUtil.createBookResponseDto();
         when(bookMapper.toModel(bookRequestDto)).thenReturn(book);
         when(bookRepository.save(book)).thenReturn(book);
         when(bookMapper.toDto(book))
@@ -63,9 +63,9 @@ public class BookServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(bookMapper, times(1)).toModel(bookRequestDto);
-        verify(bookMapper, times(1)).toDto(book);
-        verify(bookRepository, times(1)).save(book);
+        verify(bookMapper).toModel(bookRequestDto);
+        verify(bookMapper).toDto(book);
+        verify(bookRepository).save(book);
         verifyNoMoreInteractions(bookMapper, bookRepository);
     }
 
@@ -78,7 +78,7 @@ public class BookServiceTest {
         List<Book> books = List.of(book1, book2, book3);
         PageRequest pageRequest = PageRequest.of(0, books.size());
         Page<Book> booksPage = new PageImpl<>(books, pageRequest, books.size());
-        List<BookDto> bookDtos = BookDtoTestDataHelper.createListOfBookDto();
+        List<BookDto> bookDtos = TestUtil.createListOfBookDto();
         Page<BookDto> expected = new PageImpl<>(bookDtos, pageRequest, bookDtos.size());
         when(bookRepository.findAll(pageRequest)).thenReturn(booksPage);
         when(bookMapper.toDto(book1)).thenReturn(bookDtos.get(0));
@@ -88,25 +88,24 @@ public class BookServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(bookRepository, times(1)).findAll(pageRequest);
+        verify(bookRepository).findAll(pageRequest);
         verify(bookMapper, times(3)).toDto(any(Book.class));
         verifyNoMoreInteractions(bookMapper, bookRepository);
     }
-
 
     @Test
     @DisplayName("Get book with valid book id")
     void getBook_WithValidBookId_ReturnsValidBookDto() {
         Book book = new Book();
-        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
+        BookDto expected = TestUtil.createBookResponseDto();
         when(bookRepository.getBookById(anyLong())).thenReturn(Optional.of(book));
         when(bookMapper.toDto(book)).thenReturn(expected);
         BookDto actual = bookServiceImpl.getBookById(expected.getId());
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(bookRepository, times(1)).getBookById(expected.getId());
-        verify(bookMapper, times(1)).toDto(book);
+        verify(bookRepository).getBookById(expected.getId());
+        verify(bookMapper).toDto(book);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -121,7 +120,7 @@ public class BookServiceTest {
         String expected = "Can't find book by id " + bookId;
         String actual = exception.getMessage();
         assertThat(actual).isEqualTo(expected);
-        verify(bookRepository, times(1)).getBookById(bookId);
+        verify(bookRepository).getBookById(bookId);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -130,7 +129,7 @@ public class BookServiceTest {
     void deleteBook_WithValidBookId_DeletesBook() {
         Long bookId = 1L;
         bookServiceImpl.deleteBookById(bookId);
-        verify(bookRepository, times(1)).deleteById(bookId);
+        verify(bookRepository).deleteById(bookId);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -140,8 +139,8 @@ public class BookServiceTest {
         Long bookId = 1L;
         Book book = new Book();
         book.setId(bookId);
-        CreateBookRequestDto bookRequestDto = BookDtoTestDataHelper.createBookRequestDto();
-        BookDto expected = BookDtoTestDataHelper.createBookResponseDto();
+        CreateBookRequestDto bookRequestDto = TestUtil.createBookRequestDto();
+        BookDto expected = TestUtil.createBookResponseDto();
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         doNothing().when(bookMapper).toUpdatedModel(book, bookRequestDto);
         when(bookRepository.save(book)).thenReturn(book);
@@ -150,10 +149,10 @@ public class BookServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(bookRepository, times(1)).findById(bookId);
-        verify(bookMapper, times(1)).toUpdatedModel(book, bookRequestDto);
-        verify(bookRepository, times(1)).save(book);
-        verify(bookMapper, times(1)).toDto(book);
+        verify(bookRepository).findById(bookId);
+        verify(bookMapper).toUpdatedModel(book, bookRequestDto);
+        verify(bookRepository).save(book);
+        verify(bookMapper).toDto(book);
         verifyNoMoreInteractions(bookRepository, bookMapper);
     }
 
@@ -163,15 +162,15 @@ public class BookServiceTest {
         Long categoryId = 1L;
         Book book = new Book();
         List<Book> books = List.of(book);
-        List<BookDto> expected = List.of(BookDtoTestDataHelper.createBookResponseDto());
+        List<BookDto> expected = List.of(TestUtil.createBookResponseDto());
         when(bookRepository.findAllByCategoryId(categoryId)).thenReturn(books);
         when(bookMapper.toDto(book)).thenReturn(expected.get(0));
         List<BookDto> actual = bookServiceImpl.getBooksByCategoryId(categoryId);
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(bookRepository, times(1)).findAllByCategoryId(categoryId);
-        verify(bookMapper, times(1)).toDto(book);
+        verify(bookRepository).findAllByCategoryId(categoryId);
+        verify(bookMapper).toDto(book);
         verifyNoMoreInteractions(bookRepository, bookMapper);
     }
 
@@ -187,7 +186,7 @@ public class BookServiceTest {
         );
         Book book = new Book();
         List<Book> books = List.of(book);
-        BookDto bookResponseDto = BookDtoTestDataHelper.createBookResponseDto();
+        BookDto bookResponseDto = TestUtil.createBookResponseDto();
         List<BookDto> expected = List.of(bookResponseDto);
         Specification<Book> titleSpec = mock(Specification.class);
         Specification<Book> authorSpec = mock(Specification.class);
@@ -205,14 +204,14 @@ public class BookServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(parametersMapper, times(1)).toMap(searchDto);
-        verify(bookSpecificationProvider, times(1))
+        verify(parametersMapper).toMap(searchDto);
+        verify(bookSpecificationProvider)
                 .getSpecification("title", "book");
-        verify(bookSpecificationProvider, times(1))
+        verify(bookSpecificationProvider)
                 .getSpecification("author", "author");
-        verify(bookRepository, times(1))
+        verify(bookRepository)
                 .findAll(any(Specification.class));
-        verify(bookMapper, times(1)).toDto(book);
+        verify(bookMapper).toDto(book);
         verifyNoMoreInteractions(
                 parametersMapper,
                 bookSpecificationProvider,

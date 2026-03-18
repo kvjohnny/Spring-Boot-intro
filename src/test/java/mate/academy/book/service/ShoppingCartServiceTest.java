@@ -22,11 +22,7 @@ import mate.academy.book.model.User;
 import mate.academy.book.repository.shoppingcart.ShoppingCartRepository;
 import mate.academy.book.repository.user.UserRepository;
 import mate.academy.book.service.shoppingcart.impl.ShoppingCartServiceImpl;
-import mate.academy.book.util.dto.CartItemDtoTestDataHelper;
-import mate.academy.book.util.entity.CartItemTestDataHelper;
-import mate.academy.book.util.entity.CartItemsSetTestDataHelper;
-import mate.academy.book.util.dto.ShoppingCartDtoTestDataHelper;
-import mate.academy.book.util.entity.UserTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +46,7 @@ public class ShoppingCartServiceTest {
     @Test
     @DisplayName("Save valid shopping cart")
     void registerShoppingCart_userWithoutCart_savesShoppingCart() {
-        User user = UserTestDataHelper.createDefaultUser();
+        User user = TestUtil.createDefaultUser();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findShoppingCartByUserId(user.getId())).thenReturn(Optional.empty());
         shoppingCartServiceImpl.registerShoppingCard(user.getEmail());
@@ -63,10 +59,10 @@ public class ShoppingCartServiceTest {
     @Test
     @DisplayName("Get shopping cart by user email")
     void getShoppingCart_WithValidUserEmail_ReturnsValidShoppingCartDto() {
-        User user = UserTestDataHelper.createDefaultUser();
+        User user = TestUtil.createDefaultUser();
         ShoppingCart shoppingCart = new ShoppingCart().setUser(user);
         ShoppingCartResponseDto expected =
-                ShoppingCartDtoTestDataHelper.createShoppingCartResponseDto();
+                TestUtil.createShoppingCartResponseDto();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findShoppingCartByUserId(user.getId()))
                 .thenReturn(Optional.of(shoppingCart));
@@ -75,16 +71,16 @@ public class ShoppingCartServiceTest {
         assertThat(actual)
                 .usingRecursiveComparison()
                 .isEqualTo(expected);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(shoppingCartRepository, times(1)).findShoppingCartByUserId(user.getId());
-        verify(shoppingCartMapper, times(1)).toDto(shoppingCart);
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(shoppingCartRepository).findShoppingCartByUserId(user.getId());
+        verify(shoppingCartMapper).toDto(shoppingCart);
         verifyNoMoreInteractions(userRepository, shoppingCartRepository, shoppingCartMapper);
     }
 
     @Test
     @DisplayName("Throw exception when shopping cart not found for existing user")
     void getShoppingCart_WithNonExistingInDbUserEmail_ThrowsException() {
-        User user = UserTestDataHelper.createDefaultUser();
+        User user = TestUtil.createDefaultUser();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartRepository
                 .findShoppingCartByUserId(user.getId())).thenReturn(Optional.empty());
@@ -95,8 +91,8 @@ public class ShoppingCartServiceTest {
         String expected = "Can't find shopping cart by user with email " + user.getEmail();
         String actual = exception.getMessage();
         assertThat(actual).isEqualTo(expected);
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(shoppingCartRepository, times(1))
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(shoppingCartRepository)
                 .findShoppingCartByUserId(user.getId());
         verifyNoMoreInteractions(shoppingCartRepository);
     }
@@ -104,10 +100,10 @@ public class ShoppingCartServiceTest {
     @Test
     @DisplayName("Delete cart item by user email and cart item id")
     void deleteCartItem_WithValidUserEmailAndCartItemId_DeletesCartItem() {
-        User user = UserTestDataHelper.createDefaultUser();
-        CartItem cartItem = CartItemTestDataHelper.createDefaultCartItem();
+        User user = TestUtil.createDefaultUser();
+        CartItem cartItem = TestUtil.createDefaultCartItem();
         Set<CartItem> cartItems =
-                CartItemsSetTestDataHelper.cartItemsWithSingleItem(cartItem);
+                TestUtil.cartItemsWithSingleItem(cartItem);
         ShoppingCart shoppingCart =
                 new ShoppingCart().setUser(user).setCartItems(cartItems);
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -116,8 +112,8 @@ public class ShoppingCartServiceTest {
         shoppingCartServiceImpl.deleteCartItem(user.getEmail(), cartItem.getId());
         assertThat(shoppingCart.getCartItems())
                 .noneMatch(ci -> ci.getId().equals(cartItem.getId()));
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(shoppingCartRepository, times(1))
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(shoppingCartRepository)
                 .findShoppingCartByUserId(user.getId());
         verifyNoMoreInteractions(userRepository, shoppingCartRepository);
     }
@@ -125,15 +121,15 @@ public class ShoppingCartServiceTest {
     @Test
     @DisplayName("Update quantity of books in shopping cart")
     void updateQuantityOfBook_WithNewCartItemQuantity_ReturnsUpdatedShoppingCartResponseDto() {
-        User user = UserTestDataHelper.createDefaultUser();
-        CartItem cartItem = CartItemTestDataHelper.createFirstCartItemWithFilledFields();
+        User user = TestUtil.createDefaultUser();
+        CartItem cartItem = TestUtil.createFirstCartItemWithFilledFields();
         Set<CartItem> cartItems =
-                CartItemsSetTestDataHelper.cartItemsWithSingleItem(cartItem);
+                TestUtil.cartItemsWithSingleItem(cartItem);
         ShoppingCart shoppingCart = new ShoppingCart().setUser(user).setCartItems(cartItems);
         CartItemUpdateRequestDto cartItemUpdateRequestDto =
-                CartItemDtoTestDataHelper.createUpdatedCartItemRequestDto();
+                TestUtil.createUpdatedCartItemRequestDto();
         ShoppingCartResponseDto expected =
-                ShoppingCartDtoTestDataHelper.createShoppingCartResponseDtoWithUpdatedBooksQuantity();
+                TestUtil.createShoppingCartResponseDtoWithUpdatedBooksQuantity();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findShoppingCartByUserId(user.getId()))
                 .thenReturn(Optional.of(shoppingCart));
@@ -149,29 +145,29 @@ public class ShoppingCartServiceTest {
                 .isEqualTo(expected);
         assertThat(cartItem.getQuantity())
                 .isEqualTo(cartItemUpdateRequestDto.quantity());
-        verify(userRepository, times(1)).findUserByEmail(user.getEmail());
-        verify(shoppingCartRepository, times(1))
+        verify(userRepository).findUserByEmail(user.getEmail());
+        verify(shoppingCartRepository)
                 .findShoppingCartByUserId(user.getId());
-        verify(shoppingCartRepository, times(1)).save(shoppingCart);
-        verify(shoppingCartMapper, times(1)).toDto(shoppingCart);
+        verify(shoppingCartRepository).save(shoppingCart);
+        verify(shoppingCartMapper).toDto(shoppingCart);
         verifyNoMoreInteractions(userRepository, shoppingCartRepository, shoppingCartMapper);
     }
 
     @Test
     @DisplayName("Add new cart item when book not present in shopping cart")
     void addCartItem_ToShoppingCart_ReturnsUpdatedShoppingCartDto() {
-        User user = UserTestDataHelper.createDefaultUser();
+        User user = TestUtil.createDefaultUser();
         CartItem firstCartItem =
-                CartItemTestDataHelper.createFirstCartItemWithFilledFields();
+                TestUtil.createFirstCartItemWithFilledFields();
         CartItem secondCartItem =
-                CartItemTestDataHelper.createSecondCartItemWithFilledFields();
+                TestUtil.createSecondCartItemWithFilledFields();
         Set<CartItem> cartItems =
-                CartItemsSetTestDataHelper.cartItemsWithSingleItem(firstCartItem);
+                TestUtil.cartItemsWithSingleItem(firstCartItem);
         ShoppingCart shoppingCart = new ShoppingCart().setUser(user).setCartItems(cartItems);
         CartItemRequestDto cartItemRequestDto =
-                CartItemDtoTestDataHelper.createCartItemRequestDto();
+                TestUtil.createCartItemRequestDto();
         ShoppingCartResponseDto expected =
-                ShoppingCartDtoTestDataHelper.createUpdatedShoppingCartResponseDtoWithTwoCartItems();
+                TestUtil.createUpdatedShoppingCartResponseDtoWithTwoCartItems();
         when(userRepository.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(shoppingCartRepository.findShoppingCartByUserId(user.getId()))
                 .thenReturn(Optional.of(shoppingCart));
@@ -187,10 +183,10 @@ public class ShoppingCartServiceTest {
                 .isEqualTo(cartItemRequestDto.quantity());
         verify(userRepository, times(2)).findUserByEmail(user.getEmail());
         verify(shoppingCartRepository, times(2)).findShoppingCartByUserId(user.getId());
-        verify(cartItemMapper, times(1)).toModel(cartItemRequestDto);
-        verify(shoppingCartRepository, times(1)).save(shoppingCart);
+        verify(cartItemMapper).toModel(cartItemRequestDto);
+        verify(shoppingCartRepository).save(shoppingCart);
         verify(shoppingCartRepository).save(argThat(cart -> cart.getCartItems().contains(secondCartItem)));
-        verify(shoppingCartMapper, times(1)).toDto(shoppingCart);
+        verify(shoppingCartMapper).toDto(shoppingCart);
         verifyNoMoreInteractions(userRepository, shoppingCartRepository,
                 cartItemMapper, shoppingCartMapper);
     }

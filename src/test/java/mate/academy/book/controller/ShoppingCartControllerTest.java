@@ -12,8 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import mate.academy.book.dto.cartitem.CartItemRequestDto;
 import mate.academy.book.dto.cartitem.CartItemUpdateRequestDto;
 import mate.academy.book.dto.shoppingcart.ShoppingCartResponseDto;
-import mate.academy.book.util.dto.CartItemDtoTestDataHelper;
-import mate.academy.book.util.dto.ShoppingCartDtoTestDataHelper;
+import mate.academy.book.util.TestUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,7 +68,7 @@ public class ShoppingCartControllerTest {
     @DisplayName("Get shopping cart")
     void get_ShoppingCart_ReturnsValidShoppingCart() throws Exception {
         ShoppingCartResponseDto expected =
-                ShoppingCartDtoTestDataHelper.createShoppingCartResponseDto();
+                TestUtil.createShoppingCartResponseDto();
         MvcResult result = mockMvc.perform(
                         get("/cart")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -91,9 +90,9 @@ public class ShoppingCartControllerTest {
     @Test
     @DisplayName("Add cart item to shopping cart")
     void add_ValidCartItemToShoppingCart_ReturnsValidShoppingCart() throws Exception {
-        CartItemRequestDto cartItemRequestDto = CartItemDtoTestDataHelper.createCartItemRequestDto();
+        CartItemRequestDto cartItemRequestDto = TestUtil.createCartItemRequestDto();
         ShoppingCartResponseDto expected =
-                ShoppingCartDtoTestDataHelper.createUpdatedShoppingCartResponseDtoWithTwoCartItems();
+                TestUtil.createUpdatedShoppingCartResponseDtoWithTwoCartItems();
         String jsonRequest = objectMapper.writeValueAsString(cartItemRequestDto);
         MvcResult result = mockMvc.perform(
                         post("/cart")
@@ -118,9 +117,9 @@ public class ShoppingCartControllerTest {
     @DisplayName("Update quantity of books in shopping cart")
     void update_QuantityOfBookInShoppingCart_ReturnsUpdatedShoppingCart() throws Exception {
         ShoppingCartResponseDto expected =
-                ShoppingCartDtoTestDataHelper.createShoppingCartResponseDtoWithUpdatedBooksQuantity();
+                TestUtil.createShoppingCartResponseDtoWithUpdatedBooksQuantity();
         CartItemUpdateRequestDto updatedCartItemRequestDto =
-                CartItemDtoTestDataHelper.createUpdatedCartItemRequestDto();
+                TestUtil.createUpdatedCartItemRequestDto();
         String jsonRequest = objectMapper.writeValueAsString(updatedCartItemRequestDto);
         MvcResult result = mockMvc.perform(
                         put("/cart/items/{cartItemId}", 1L)
